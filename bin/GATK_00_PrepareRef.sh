@@ -13,26 +13,28 @@
 
 #change this variable to correspond to the directory you downloaded the git repository
 export GENMODgit="/pylon5/mc48o5p/severin/isugif/genomeModules"
-export TEMPDIR="./"
+export TMPDIR="./"
 
 REF="$1"
+export BASEREF=$(basename ${REF%.*})_sorted
+
 #index genome for (a) picard, (b) samtools and (c) bwa
 ####need to change bioawk to singularity but can't update yet because bowtie2 is throwing an error on spack
-bioawk -c fastx '{print}' $REF | sort -k1,1V -T $TEMPDIR | awk '{print ">"$1;print $2}' >Genome_sorted.fa
+bioawk -c fastx '{print}' $REF | sort -k1,1V -T $TMPDIR | awk '{print ">"$1;print $2}' > ${BASEREF}.fa
 #parallel <<FIL
 ${GENMODgit}/wrappers/GM picard CreateSequenceDictionary \
-  REFERENCE=Genome_sorted.fa \
-  OUTPUT=Genome_sorted.dict
-${GENMODgit}/wrappers/GM samtools faidx Genome_sorted.fa
-${GENMODgit}/wrappers/GM bwa index -a bwtsw Genome_sorted.fa
+  REFERENCE=${BASEREF}.fa \
+  OUTPUT=${BASEREF}.dict
+${GENMODgit}/wrappers/GM samtools faidx ${BASEREF}.fa
+${GENMODgit}/wrappers/GM bwa index -a bwtsw ${BASEREF}.fa
 #FIL
 
 
 
 # Create interval list (here 100 kb intervals)
-${GENMODgit}/wrappers/fasta_length Genome_sorted.fa > Genome_sorted_length.txt
-${GENMODgit}/wrappers/GM bedtools makewindows -w 100000 -g Genome_sorted_length.txt > Genome_sorted_100kb_coords.bed
+${GENMODgit}/wrappers/fasta_length ${BASEREF}.fa > ${BASEREF}_length.txt
+${GENMODgit}/wrappers/GM bedtools makewindows -w 100000 -g ${BASEREF}_length.txt > ${BASEREF}_100kb_coords.bed
 ${GENMODgit}/wrappers/GM picard BedToIntervalList \
-  INPUT= Genome_sorted_100kb_coords.bed \
-  SEQUENCE_DICTIONARY=Genome_sorted.dict \
-  OUTPUT=Genome_sorted_100kb_gatk_intervals.list
+  INPUT= ${BASEREF}_100kb_coords.bed \
+  SEQUENCE_DICTIONARY=${BASEREF}.dict \
+  OUTPUT=${BASEREF}_100kb_gatk_intervals.list

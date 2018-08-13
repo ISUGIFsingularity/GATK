@@ -11,7 +11,7 @@
 #module load $1
 
 GENOMEDIR="./"
-GNAME=$1 
+GNAME=$1
 
 REF="$GENOMEDIR/$GNAME"
 # this option might be the frequetly changed, hence not it's a variable
