@@ -13,19 +13,19 @@
 
 #change this variable to correspond to the directory you downloaded the git repository
 export GENMODgit="/pylon5/mc48o5p/severin/isugif/genomeModules"
-
+export TEMPDIR="./"
 
 REF="$1"
 #index genome for (a) picard, (b) samtools and (c) bwa
 ####need to change bioawk to singularity but can't update yet because bowtie2 is throwing an error on spack
-bioawk -c fastx '{print}' $REF | sort -k1,1V | awk '{print ">"$1;print $2}' >Genome_sorted.fa
-parallel <<FIL
+bioawk -c fastx '{print}' $REF | sort -k1,1V -T $TEMPDIR | awk '{print ">"$1;print $2}' >Genome_sorted.fa
+#parallel <<FIL
 ${GENMODgit}/wrappers/GM picard CreateSequenceDictionary \
   REFERENCE=Genome_sorted.fa \
   OUTPUT=Genome_sorted.dict
 ${GENMODgit}/wrappers/GM samtools faidx Genome_sorted.fa
 ${GENMODgit}/wrappers/GM bwa index -a bwtsw Genome_sorted.fa
-FIL
+#FIL
 
 
 
