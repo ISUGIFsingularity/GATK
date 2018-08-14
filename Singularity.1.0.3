@@ -48,7 +48,6 @@ source $SPACK_ROOT/share/spack/setup-env.sh
 
 #version 4.0.4.0 isn't working with spack install gatk@4.0.4.0
 mkdir -p $SPACK_ROOT/mirror/gatk
-spack mirror add local $SPACK_ROOT/mirror
 pushd $SPACK_ROOT/mirror/gatk
 https://github.com/broadinstitute/gatk/releases/download/4.0.7.0/gatk-4.0.7.0.zip
 popd
