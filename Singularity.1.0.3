@@ -34,3 +34,18 @@ module load perl
 module load python
 module load vcftools
 module load py-biopython
+
+%post
+
+export SPACK_ROOT=/opt/spack
+export SPACK_ROOT
+export PATH=$SPACK_ROOT/bin:$PATH
+
+yum -y install bc paste wget
+yum clean all
+
+export FORCE_UNSAFE_CONFIGURE=1
+
+source $SPACK_ROOT/share/spack/setup-env.sh
+
+spack install gatk@4.0.4.0
