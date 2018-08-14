@@ -41,8 +41,10 @@ UNIT=$(echo ${FILE} | cut -d "_" -f 2)
 RGLB=$(echo ${FILE} | cut -d "_" -f 3)
 #GATK=$GATK_HOME/GenomeAnalysisTK.jar
 
-TMPDIR=/local/scratch/${USER}/${PBS_JOBID}
-mkdir -p /local/scratch/${USER}/${PBS_JOBID}
+#I have set up the temp directory that works on Bridges you may need to modify this if the script fails with a java.nio.file.NoSuchFileException: 
+#TMPDIR=/local/scratch/${USER}/${PBS_JOBID}
+TMPDIR=$LOCAL
+#mkdir -p /local/scratch/${USER}/${PBS_JOBID}
 echo $TMPDIR
 
 echo "Sorting BAM of ${FILE}"
