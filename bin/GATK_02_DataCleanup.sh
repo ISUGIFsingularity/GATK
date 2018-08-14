@@ -14,28 +14,32 @@
 ######################################
 ### Format file names as:
 ###
-### <UNIQIE_FILE_IDENTIFIER>_<UNIT>_<EXPTTITLE>.bam
+### <UNIQIE_FILE_IDENTIFIER>_<UNIT>_<READGROUP>.bam
 ###
 ### This will ensure that the Read Group will be properly parsed
 ### Else you need to manually add them below (SAMPLE, UNIT, RGLB)
 ###
 ######################################
 
-module load picard
-module load samtools
-module load java
-module load gatk
-module load $1
+#module load picard
+#module load samtools
+#module load java
+#module load gatk
+#module load $1
 
 FILE="$2"
-REF="$GENOMEFASTA"
+
+REF="$1"  ## same as input for GATK_00
+
+# This assumes that you ran GATK_00 to sort the original reference file.
+export REF=$(basename ${REF%.*})_sorted.fa
 
 # for adding read group info
 # if filenames don't have 3 fields, manually add them below
 SAMPLE=$(echo ${FILE} | cut -d "_" -f 1)
 UNIT=$(echo ${FILE} | cut -d "_" -f 2)
 RGLB=$(echo ${FILE} | cut -d "_" -f 3)
-GATK=$GATK_HOME/GenomeAnalysisTK.jar
+#GATK=$GATK_HOME/GenomeAnalysisTK.jar
 
 TMPDIR=/local/scratch/${USER}/${PBS_JOBID}
 mkdir -p /local/scratch/${USER}/${PBS_JOBID}
@@ -44,7 +48,7 @@ echo $TMPDIR
 echo "Sorting BAM of ${FILE}"
 
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_picsort.bam ]; then
-java -Djava.io.tmpdir=$TMPDIR -Xmx100G -jar $PICARD_HOME/picard.jar SortSam \
+${GENMODgit}/wrappers/GATK picard SortSam \
   TMP_DIR=${TMPDIR}\
   INPUT=${FILE} \
   OUTPUT=${FILE%.*}_picsort.bam \
@@ -57,7 +61,7 @@ fi
 
 echo "Cleaning Alignment file of ${FILE}"
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_picsort_cleaned.bam ]; then
-java -Djava.io.tmpdir=$TMPDIR -Xmx100G -jar $PICARD_HOME/picard.jar CleanSam \
+${GENMODgit}/wrappers/GATK picard CleanSam \
   TMP_DIR=${TMPDIR} \
   INPUT=${FILE%.*}_picsort.bam \
   OUTPUT=${FILE%.*}_picsort_cleaned.bam \
@@ -69,7 +73,7 @@ fi
 
 echo "Marking Duplicates of ${FILE}"
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_dedup.bam ]; then
-java -Djava.io.tmpdir=$TMPDIR -Xmx100G -jar $PICARD_HOME/picard.jar MarkDuplicates \
+${GENMODgit}/wrappers/GATK picard MarkDuplicates \
   TMP_DIR=${TMPDIR} \
   INPUT=${FILE%.*}_picsort_cleaned.bam \
   OUTPUT=${FILE%.*}_dedup.bam \
@@ -84,7 +88,7 @@ fi
 
 echo "Adding RG info of ${FILE}"
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_dedup_RG.bam ]; then
-java -Djava.io.tmpdir=$TMPDIR -Xmx100G -jar $PICARD_HOME/picard.jar AddOrReplaceReadGroups \
+${GENMODgit}/wrappers/GATK picard AddOrReplaceReadGroups \
   TMP_DIR=${TMPDIR} \
   INPUT=${FILE%.*}_dedup.bam \
   OUTPUT=${FILE%.*}_dedup_RG.bam \
@@ -101,9 +105,9 @@ fi
 
 echo "Indel Realigner: create intervals of ${FILE}"
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_target_intervals.list ]; then
-samtools index ${FILE%.*}_dedup_RG.bam
+${GENMODgit}/wrappers/GATK samtools index ${FILE%.*}_dedup_RG.bam
 
-java -Djava.io.tmpdir=$TMPDIR -Xmx100G -jar $GATK \
+${GENMODgit}/wrappers/GATK gatk \
   -T RealignerTargetCreator \
   -R ${REF} \
   -I ${FILE%.*}_dedup_RG.bam \
@@ -115,7 +119,7 @@ fi
 
 echo "Indel Realigner: write realignments of ${FILE}"
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_realigned.bam ]; then
-java -Djava.io.tmpdir=$TMPDIR -Xmx100G -jar $GATK \
+${GENMODgit}/wrappers/GATK gatk \
   -T IndelRealigner \
   -R ${REF} \
   -I ${FILE%.*}_dedup_RG.bam \
@@ -126,7 +130,7 @@ exit 1
 }
 fi
 
-samtools index ${FILE%.*}_realigned.bam
+${GENMODgit}/wrappers/GATK samtools index ${FILE%.*}_realigned.bam
 
 echo "cleaning up of ${FILE%.*}"
 #if your job stops midway move all the intermediate files into the main directory and comment out this section
