@@ -26,6 +26,7 @@
 #module load java
 #module load gatk
 #module load $1
+export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
 
 FILE="$2"
 

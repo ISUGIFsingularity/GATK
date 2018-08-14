@@ -22,14 +22,14 @@ export BASEREF=$(basename ${REF%.*})_sorted
 #index genome for (a) picard, (b) samtools and (c) bwa
 ${GENMODgit}/wrappers/GATK bioawk -c fastx '{print}' $REF | sort -k1,1V -T $TMPDIR | awk '{print ">"$1;print $2}' > ${BASEREF}.fa
 
-${GENMODgit}/wrappers/GATK parallel <<FIL
+#${GENMODgit}/wrappers/GATK parallel <<FIL
 module load singularity
 ${GENMODgit}/wrappers/GATK picard CreateSequenceDictionary \
   REFERENCE=${BASEREF}.fa \
   OUTPUT=${BASEREF}.dict
 ${GENMODgit}/wrappers/GATK samtools faidx ${BASEREF}.fa
 ${GENMODgit}/wrappers/GATK bwa index -a bwtsw ${BASEREF}.fa
-FIL
+#FIL
 
 
 

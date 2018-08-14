@@ -2,11 +2,15 @@
 # This step can be skipped if you don't have the known SNPs file
 # You can run this again, after you complete first round of SNP calling to improve the SNPs called
 
+export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
+
+
+
 GATK="/data003/GIF/software/packages/gatk/3.3"
 KNOWN_VCF="/home/arnstrm/arnstrm/20150413_Graham_SoybeanFST/03_BAM/Soybean_SNPs_119_lines_gatk_htc_only_snps_filtered_pass.vcf"
 REFERENCE="/home/arnstrm/arnstrm/20150413_Graham_SoybeanFST/01_DATA/B_REF/Gmax_275_v2.0.fa"
 FILE="$1"
-java -Xmx60G -jar ${GATK}/GenomeAnalysisTK.jar \
+${GENMODgit}/wrappers/GATK gatk \
     -T BaseRecalibrator \
     -R ${REFERENCE} \
     -I ${FILE} \
@@ -16,7 +20,7 @@ echo >&2 recal data table generation failed for $FILE
 exit 1
 }
 
-java -Xmx60G -jar ${GATK}/GenomeAnalysisTK.jar \
+${GENMODgit}/wrappers/GATK gatk \
     -T BaseRecalibrator \
     -R ${REFERENCE} \
     -I ${FILE} \
@@ -35,7 +39,7 @@ exit 1
 #echo >&2 recal plots generation failed for $FILE
 #exit 1
 #}
-java -Xmx60G -jar ${GATK}/GenomeAnalysisTK.jar \
+${GENMODgit}/wrappers/GATK gatk \
     -T PrintReads \
     -R ${REFERENCE} \
     -I ${FILE} \
@@ -44,7 +48,7 @@ java -Xmx60G -jar ${GATK}/GenomeAnalysisTK.jar \
 echo >&2 writing recal bam failed for $FILE
 exit 1
 }
-java -Xmx60G -jar /data003/GIF/software/packages/picard_tools/1.130/picard.jar BuildBamIndex \
+${GENMODgit}/wrappers/GATK picard BuildBamIndex \
     INPUT=${FILE%.*}_recal_reads.bam \
     OUTPUT=${FILE%.*}_recal_reads.bai || {
 echo >&2 recal bam indexing failed for $FILE

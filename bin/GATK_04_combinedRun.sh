@@ -1,6 +1,11 @@
 #!/bin/bash
 
-module load $1
+export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
+
+
+GENOMEFASTA
+GENOMEINTERVALS
+
 
 #Grab bamfiles that will be used for input. all bam files in the folder will be selected.
 #these files will be written to a temp file that will be read in later to create the input line for each command
@@ -16,7 +21,7 @@ while read line; do \
 g2=$(echo $line | awk '{print $1":"$2"-"$3}'); \
 g1=$(echo $line | awk '{print $1"_"$2"_"$3}'); \
 CWD=$(pwd)
-echo -n "java -Xmx2048m -XX:+UseParallelOldGC -XX:ParallelGCThreads=1 -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10 -Djava.io.tmpdir=\${TMPDIR} -jar /data003/GIF/software/packages/gatk/3.3/GenomeAnalysisTK.jar -T HaplotypeCaller --pcr_indel_model NONE \
+echo -n "${GENMODgit}/wrappers/GATK gatk  -T HaplotypeCaller --pcr_indel_model NONE \
 -R ${GENOMEFASTA} \
 $(cat temp) \
 -L "${g2}" --genotyping_mode DISCOVERY -stand_emit_conf 10 -stand_call_conf 30 -o \${TMPDIR}/"${g1}".vcf;"; \
