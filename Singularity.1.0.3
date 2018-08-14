@@ -1,5 +1,5 @@
 Bootstrap:shub
-From:ResearchIT/spack-singularity:openmpi
+From:ISUGIFsingularity/GATK:1.0.2
 
 %labels
 MAINTAINER severin@iastate.edu
@@ -34,50 +34,3 @@ module load perl
 module load python
 module load vcftools
 module load py-biopython
-
-
-
-
-%post
-export SPACK_ROOT=/opt/spack
-export SPACK_ROOT
-export PATH=$SPACK_ROOT/bin:$PATH
-
-yum -y install bc paste wget
-yum clean all
-
-export FORCE_UNSAFE_CONFIGURE=1
-
-source $SPACK_ROOT/share/spack/setup-env.sh
-
-
-#bzip.org is down, fetching repo from fossies.org into mirror
-mkdir -p $SPACK_ROOT/mirror/bzip2
-spack mirror add local $SPACK_ROOT/mirror
-pushd $SPACK_ROOT/mirror/bzip2
-wget https://fossies.org/linux/misc/bzip2-1.0.6.tar.gz
-popd
-
-
-
-spack install picard
-spack install gmap-gsnap
-spack install bowtie2
-spack install bwa
-spack install gatk
-spack install bedtools2
-spack install samtools
-spack install parallel
-spack install bioawk
-spack install perl
-spack install vcftools
-spack install py-biopython
-
-
-
-#for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
-
-
-cd $SPACK_ROOT
-
-%runscript

@@ -1,10 +1,15 @@
 #!/bin/bash
 
 export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
+export TMPDIR=$LOCAL/
 
+# This assumes that you ran GATK_00 to sort the original reference file.
+REF="$1"  ## same as input for GATK_00
+export BASEREF=$(basename ${REF%.*})_sorted
+export REF=${BASEREF}_sorted.fa
 
-GENOMEFASTA
-GENOMEINTERVALS
+GENOMEFASTA=$REF
+GENOMEINTERVALS=${BASEREF}_100kb_coords.bed
 
 
 #Grab bamfiles that will be used for input. all bam files in the folder will be selected.
