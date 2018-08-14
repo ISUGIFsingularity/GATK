@@ -22,7 +22,7 @@ export PATH=$SPACK_ROOT/isugif/utilities/bin:$SPACK_ROOT/utilities/wrappers:$PAT
 module load bedtools2
 module load bowtie2
 module load bwa
-module load gatk/4.0.4.0
+module load gatk
 module load bedtools2
 module load samtools
 module load picard
@@ -45,7 +45,6 @@ yum -y install bc paste wget
 yum clean all
 
 export FORCE_UNSAFE_CONFIGURE=1
-
 source $SPACK_ROOT/share/spack/setup-env.sh
 
-spack install gatk@4.0
+spack install gatk@4.0.4.0
