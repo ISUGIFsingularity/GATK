@@ -11,7 +11,6 @@
 #module load python
 #module load bioawk
 
-module load singularity
 #change this variable to correspond to the directory you downloaded the git repository
 export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
 export TMPDIR="./"
