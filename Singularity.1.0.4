@@ -51,24 +51,23 @@ source $SPACK_ROOT/share/spack/setup-env.sh
 
 
 #bzip.org is down, fetching repo from fossies.org into mirror
+#version 4.0.4.0 isn't working with spack install gatk@4.0.4.0
 mkdir -p $SPACK_ROOT/mirror/bzip2
+mkdir -p $SPACK_ROOT/mirror/gatk
 spack mirror add local $SPACK_ROOT/mirror
 pushd $SPACK_ROOT/mirror/bzip2
 wget https://fossies.org/linux/misc/bzip2-1.0.6.tar.gz
-popd
-
-#version 4.0.4.0 isn't working with spack install gatk@4.0.4.0
-mkdir -p $SPACK_ROOT/mirror/gatk
 pushd $SPACK_ROOT/mirror/gatk
 wget https://github.com/broadinstitute/gatk/releases/download/4.0.7.0/gatk-4.0.7.0.zip
 popd
 
 
+
+spack install gatk
 spack install picard
 spack install gmap-gsnap
 spack install bowtie2
 spack install bwa
-spack install gatk
 spack install bedtools2
 spack install samtools
 spack install parallel
@@ -76,6 +75,8 @@ spack install bioawk
 spack install perl
 spack install vcftools
 spack install py-biopython
+
+
 
 
 
