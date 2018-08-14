@@ -16,7 +16,6 @@ export SPACK_ROOT
 export PATH=$SPACK_ROOT/bin:$PATH
 source /etc/profile.d/modules.sh
 source $SPACK_ROOT/share/spack/setup-env.sh
-export PATH=$SPACK_ROOT/isugif/utilities/bin:$SPACK_ROOT/utilities/wrappers:$PATH
 #for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
 
 module load bedtools2
@@ -46,5 +45,3 @@ yum clean all
 
 export FORCE_UNSAFE_CONFIGURE=1
 source $SPACK_ROOT/share/spack/setup-env.sh
-
-spack install gatk@4.0.4.0
