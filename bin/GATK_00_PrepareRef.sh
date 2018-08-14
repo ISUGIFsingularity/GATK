@@ -11,6 +11,7 @@
 #module load python
 #module load bioawk
 
+module load singularity
 #change this variable to correspond to the directory you downloaded the git repository
 export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
 export TMPDIR="./"
@@ -38,4 +39,4 @@ ${GENMODgit}/wrappers/GATK bedtools makewindows -w 100000 -g ${BASEREF}_length.t
 ${GENMODgit}/wrappers/GATK picard BedToIntervalList \
   INPUT= ${BASEREF}_100kb_coords.bed \
   SEQUENCE_DICTIONARY=${BASEREF}.dict \
-  OUTPUT=${BASEREF}_100kb_gatk_intervals.li st
+  OUTPUT=${BASEREF}_100kb_gatk_intervals.list
