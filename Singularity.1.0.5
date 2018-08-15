@@ -77,6 +77,13 @@ wget http://monalisa.cern.ch/MONALISA/download/java/jdk-8u172-linux-x64.tar.gz
 mv jdk-8u172-linux-x64.tar.gz jdk-8u172-b11.tar.gz
 popd
 
+#glib unreachable
+mkdir -p $SPACK_ROOT/mirror/glib
+pushd $SPACK_ROOT/mirror/glib
+wget https://fossies.org/linux/misc/glib-2.56.1.tar.xz
+mv glib-2.56.1.tar.xz glib-2.56.1.tar.xz
+popd
+
 
 spack install gatk@4.0.4.0
 spack install picard
