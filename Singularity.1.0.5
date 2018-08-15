@@ -84,6 +84,11 @@ wget https://fossies.org/linux/misc/glib-2.56.1.tar.xz
 #mv glib-2.56.1.tar.xz glib-2.56.1.tar.xz
 popd
 
+# gobject-introspection-1.49.2.tar.xz
+mkdir -p $SPACK_ROOT/mirror/gobject-introspection
+pushd $SPACK_ROOT/mirror/gobject-introspection
+wget https://mirror.umd.edu/gnome/sources/gobject-introspection/1.49/gobject-introspection-1.49.2.tar.xz
+popd
 
 spack install gatk@4.0.4.0
 spack install picard
