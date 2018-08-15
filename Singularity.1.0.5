@@ -1,5 +1,5 @@
 Bootstrap:shub
-From:ISUGIFsingularity/GATK:1.0.2
+From:ResearchIT/spack-singularity:openmpi
 
 %labels
 MAINTAINER severin@iastate.edu
@@ -18,6 +18,11 @@ source /etc/profile.d/modules.sh
 source $SPACK_ROOT/share/spack/setup-env.sh
 #for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
 
+# make sure spack is up2date
+cd $SPACK_ROOT
+git pull
+cd -
+
 module load bedtools2
 module load bowtie2
 module load bwa
@@ -33,9 +38,11 @@ module load perl
 module load python
 module load vcftools
 module load py-biopython
+module load datamash
+
+
 
 %post
-
 export SPACK_ROOT=/opt/spack
 export SPACK_ROOT
 export PATH=$SPACK_ROOT/bin:$PATH
@@ -44,30 +51,8 @@ yum -y install bc paste wget
 yum clean all
 
 export FORCE_UNSAFE_CONFIGURE=1
+
 source $SPACK_ROOT/share/spack/setup-env.sh
-
-#version 4.0.4.0 isn't working with spack install gatk@4.0.4.0
-mkdir -p $SPACK_ROOT/mirror/gatk
-pushd $SPACK_ROOT/mirror/gatk
-https://github.com/broadinstitute/gatk/releases/download/4.0.7.0/gatk-4.0.7.0.zip
-popd
-
-spack install gatk
-
-
-
-#install github st package to calculate standard deviation.
-
-cd $SPACK_ROOT
-cpan -i ExtUtils::MakeMaker
-git clone https://github.com/nferraz/st.git
-cd st
-source /etc/profile.d/modules.sh
-module load perl
-perl Makefile.PL
-make
-make test
-sudo make install
 
 
 #bzip.org is down, fetching repo from fossies.org into mirror
@@ -77,8 +62,26 @@ pushd $SPACK_ROOT/mirror/bzip2
 wget https://fossies.org/linux/misc/bzip2-1.0.6.tar.gz
 popd
 
-#version 4.0.4.0 isn't working with spack install gatk@4.0.4.0
-mkdir -p $SPACK_ROOT/mirror/gatk
-pushd $SPACK_ROOT/mirror/gatk
-wget https://github.com/broadinstitute/gatk/releases/download/4.0.7.0/gatk-4.0.7.0.zip
-popd
+
+
+spack install picard
+spack install gmap-gsnap
+spack install bowtie2
+spack install bwa
+spack install gatk@4.0.4.0
+spack install bedtools2
+spack install samtools
+spack install parallel
+spack install bioawk
+spack install perl
+spack install vcftools
+spack install py-biopython
+spack install datamash
+
+
+#for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
+
+
+cd $SPACK_ROOT
+
+%runscript

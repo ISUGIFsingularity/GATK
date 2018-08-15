@@ -12,22 +12,22 @@ vcffile=(*.vcf)
 #this is just naming the vcf file that will be generated belwo.
 RAW="WhiteWildCultured.vcf"
 REFERENCE="/work/GIF/remkv6/Purcell/Abalone/15_WhiteWildCultured/H.rufescens.fasta"
-#MAXDEPTH=19950
-GATK="/shared/software/GIF/programs/gatk/3.5"
+#MAXDEPTH=30000
+
 
 vcf-concat ${vcffile[@]} >> ../${RAW}
 
-MAXDEPTH=$(grep -oh ";DP=.*;" ${RAW} | cut -d ";" -f 2 | cut -d "="  -f 2 | st --sd |awk '{print $0*5}')
+  MAXDEPTH=$(grep -oh ";DP=.*;" ${RAW} | cut -d ";" -f 2 | cut -d "="  -f 2 | st --sd |awk '{print $0*5}')
 cat ../${RAW} | vcf-sort -t $TMPDIR -p 16 -c > ${RAW%.*}_sorted.vcf
 
-java -Xmx120g -Djava.io.tmpdir=$TMPDIR -jar ${GATK}/GenomeAnalysisTK.jar \
+${GENMODgit}/wrappers/GATK gatk \
   -T SelectVariants \
   -R ${REFERENCE} \
   -V ${RAW%.*}_sorted.vcf \
   -selectType SNP \
   -o ${RAW%.*}_sorted_SNPs.vcf
 
-java -Xmx120g -Djava.io.tmpdir=$TMPDIR -jar ${GATK}/GenomeAnalysisTK.jar \
+${GENMODgit}/wrappers/GATK gatk \
   -T VariantFiltration \
   -R ${REFERENCE} \
   -V ${RAW%.*}_sorted_SNPs.vcf \
@@ -35,14 +35,14 @@ java -Xmx120g -Djava.io.tmpdir=$TMPDIR -jar ${GATK}/GenomeAnalysisTK.jar \
   --filterName "FAIL" \
   -o ${RAW%.*}_sorted_filtered_SNPs.vcf
 
-java -Xmx120g -Djava.io.tmpdir=$TMPDIR -jar ${GATK}/GenomeAnalysisTK.jar \
+${GENMODgit}/wrappers/GATK gatk \
   -T SelectVariants \
   -R ${REFERENCE} \
   -V ${RAW%.*}_sorted.vcf \
   -selectType INDEL \
   -o ${RAW%.*}_sorted_indels.vcf
 
-java -Xmx120g -Djava.io.tmpdir=$TMPDIR -jar ${GATK}/GenomeAnalysisTK.jar \
+${GENMODgit}/wrappers/GATK gatk \
   -T VariantFiltration \
   -R ${REFERENCE} \
   -V ${RAW%.*}_sorted_indels.vcf \

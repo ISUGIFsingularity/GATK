@@ -33,24 +33,6 @@ $(cat temp) \
 echo "mv \${TMPDIR}/"${g1}".vcf $CWD" ; \
 done<${GENOMEINTERVALS}  > gatk.cmds
 
-cat <<-FIL > GATK04test.sub
-#!/bin/bash
-#PBS -q batch
-#PBS -l nodes=8:ppn=16
-#PBS -l walltime=48:00:00
-#PBS -N GATK05
-#PBS -o \${PBS_JOBNAME}.o\${PBS_JOBID} -e \${PBS_JOBNAME}.e\${PBS_JOBID}
-#PBS -m ae -M andrewseverin@gmail.com
-cd \$PBS_O_WORKDIR
-ulimit -s unlimited
-chmod g+rw \${PBS_JOBNAME}.[eo]\${PBS_JOBID}
-module use /data003/GIF/software/modules
-module load parallel
-module load java/1.7.0_76
-which java
-parallel --env _ --jobs 8 --sshloginfile \$PBS_NODEFILE \
-  --joblog gatk_progress_05.log --workdir \$PWD < gatk.cmds
-ssh condo "qstat -f \${PBS_JOBID} |head"
-FIL
 
-#set the --env _ option in order to capture the PBS varaibles that would not be passed through otherwise to parallel on other nodes"
+
+makeSLURMS_bridges.py 100 gatk.cmds 

@@ -18,6 +18,11 @@ source /etc/profile.d/modules.sh
 source $SPACK_ROOT/share/spack/setup-env.sh
 #for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
 
+# make sure spack is up2date
+cd $SPACK_ROOT
+git pull
+cd -
+
 module load bedtools2
 module load bowtie2
 module load bwa
@@ -63,7 +68,7 @@ spack install picard
 spack install gmap-gsnap
 spack install bowtie2
 spack install bwa
-spack install gatk
+spack install gatk@4.0.4.0
 spack install bedtools2
 spack install samtools
 spack install parallel
