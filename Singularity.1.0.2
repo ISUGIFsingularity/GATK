@@ -18,10 +18,7 @@ source /etc/profile.d/modules.sh
 source $SPACK_ROOT/share/spack/setup-env.sh
 #for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
 
-# make sure spack is up2date
-cd $SPACK_ROOT
-git pull
-cd -
+
 
 module load bedtools2
 module load bowtie2
@@ -38,8 +35,6 @@ module load perl
 module load python
 module load vcftools
 module load py-biopython
-
-
 
 
 %post

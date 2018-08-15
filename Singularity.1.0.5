@@ -42,10 +42,18 @@ module load datamash
 
 
 
+
+
 %post
 export SPACK_ROOT=/opt/spack
 export SPACK_ROOT
 export PATH=$SPACK_ROOT/bin:$PATH
+
+# make sure spack is up2date
+cd $SPACK_ROOT
+git pull
+cd -
+
 
 yum -y install bc paste wget
 yum clean all
@@ -63,12 +71,11 @@ wget https://fossies.org/linux/misc/bzip2-1.0.6.tar.gz
 popd
 
 
-
+spack install gatk@4.0.4.0
 spack install picard
 spack install gmap-gsnap
 spack install bowtie2
 spack install bwa
-spack install gatk@4.0.4.0
 spack install bedtools2
 spack install samtools
 spack install parallel
