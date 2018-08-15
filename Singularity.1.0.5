@@ -70,6 +70,12 @@ pushd $SPACK_ROOT/mirror/bzip2
 wget https://fossies.org/linux/misc/bzip2-1.0.6.tar.gz
 popd
 
+#jdk u172 was not av  ailable, it was updated to u181
+mkdir -p $SPACK_ROOT/mirror/jdk
+pushd $SPACK_ROOT/mirror/jdk
+wget http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz
+popd
+
 
 spack install gatk@4.0.4.0
 spack install picard
