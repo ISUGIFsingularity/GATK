@@ -3,13 +3,6 @@
 # You need to supply the referece genome as REF below or as:
 # ./GATK_00_PrepareRef.sh your_genome.fasta
 
-#module load GIF2/picard
-#module load samtools
-#module load bwa
-#module load bedtools2
-#module load parallel
-#module load python
-#module load bioawk
 
 module load singularity
 #change this variable to correspond to the directory you downloaded the git repository
@@ -27,7 +20,6 @@ ${GATKgit}/wrappers/GATK picard CreateSequenceDictionary \
   OUTPUT=${BASEREF}.dict
 ${GATKgit}/wrappers/GATK samtools faidx ${BASEREF}.fa
 ${GATKgit}/wrappers/GATK bwa index -a bwtsw ${BASEREF}.fa
-
 
 
 # Create interval list (here 100 kb intervals)

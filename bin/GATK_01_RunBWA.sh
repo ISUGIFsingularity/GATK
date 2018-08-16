@@ -8,7 +8,7 @@ module load singularity
 
 #change this variable to correspond to the directory you downloaded the git repository
 export GATKgit="/pylon5/mc48o5p/severin/isugif/GATK"
-
+export TMPDIR=$LOCAL
 
 REF="$1"  ## same as input for GATK_00
 
@@ -23,7 +23,7 @@ if [ "$#" -eq 3 ]; then
   READ1="$2"
   READ2="$3"
   OUTNAME=$(basename ${READ1%.*} | perl -pe 's/_/-/g')_unit_RG
-  ${GATKgit}/wrappers/GATK bwa mem -  M -t ${THREADS} ${REF} ${READ1} ${READ2} | ${GATKgit}/wrappers/GATK samtools view -buS - > ${OUTNAME}.bam
+  ${GATKgit}/wrappers/GATK bwa mem -M -t ${THREADS} ${REF} ${READ1} ${READ2} | ${GATKgit}/wrappers/GATK samtools view -buS - > ${OUTNAME}.bam
 # if not just use the reads as single reads
 elif [ "$#" -eq 1 ]; then
   READ1="$2"
