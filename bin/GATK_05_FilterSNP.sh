@@ -4,9 +4,9 @@
 #Also update the GATK location, Raw file and the reference for your run
 
 
-module load GIF/perl/5.24.1
-module load vcftools
-module load GIF2/gatk
+#module load GIF/perl/5.24.1
+#module load vcftools
+#module load GIF2/gatk
 
 vcffile=(*.vcf)
 #this is just naming the vcf file that will be generated belwo.
@@ -17,17 +17,17 @@ REFERENCE="/work/GIF/remkv6/Purcell/Abalone/15_WhiteWildCultured/H.rufescens.fas
 
 vcf-concat ${vcffile[@]} >> ../${RAW}
 
-  MAXDEPTH=$(grep -oh ";DP=.*;" ${RAW} | cut -d ";" -f 2 | cut -d "="  -f 2 | ${GENMODgit}/wrappers/GATK datamash sstdev 1  |awk '{print $0*5}')
+  MAXDEPTH=$(grep -oh ";DP=.*;" ${RAW} | cut -d ";" -f 2 | cut -d "="  -f 2 | ${GATKgit}/wrappers/GATK datamash sstdev 1  |awk '{print $0*5}')
 cat ../${RAW} | vcf-sort -t $TMPDIR -p 16 -c > ${RAW%.*}_sorted.vcf
 
-${GENMODgit}/wrappers/GATK gatk \
+${GATKgit}/wrappers/GATK gatk \
   -T SelectVariants \
   -R ${REFERENCE} \
   -V ${RAW%.*}_sorted.vcf \
   -selectType SNP \
   -o ${RAW%.*}_sorted_SNPs.vcf
 
-${GENMODgit}/wrappers/GATK gatk \
+${GATKgit}/wrappers/GATK gatk \
   -T VariantFiltration \
   -R ${REFERENCE} \
   -V ${RAW%.*}_sorted_SNPs.vcf \
@@ -35,14 +35,14 @@ ${GENMODgit}/wrappers/GATK gatk \
   --filterName "FAIL" \
   -o ${RAW%.*}_sorted_filtered_SNPs.vcf
 
-${GENMODgit}/wrappers/GATK gatk \
+${GATKgit}/wrappers/GATK gatk \
   -T SelectVariants \
   -R ${REFERENCE} \
   -V ${RAW%.*}_sorted.vcf \
   -selectType INDEL \
   -o ${RAW%.*}_sorted_indels.vcf
 
-${GENMODgit}/wrappers/GATK gatk \
+${GATKgit}/wrappers/GATK gatk \
   -T VariantFiltration \
   -R ${REFERENCE} \
   -V ${RAW%.*}_sorted_indels.vcf \

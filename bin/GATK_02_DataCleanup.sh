@@ -26,7 +26,7 @@
 #module load java
 #module load gatk
 #module load $1
-export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
+export GATKgit="/pylon5/mc48o5p/severin/isugif/GATK"
 
 FILE="$2"
 
@@ -51,7 +51,7 @@ echo $TMPDIR
 echo "Sorting BAM of ${FILE}"
 
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_picsort.bam ]; then
-${GENMODgit}/wrappers/GATK picard SortSam \
+${GATKgit}/wrappers/GATK picard SortSam \
   TMP_DIR=${TMPDIR}\
   INPUT=${FILE} \
   OUTPUT=${FILE%.*}_picsort.bam \
@@ -64,7 +64,7 @@ fi
 
 echo "Cleaning Alignment file of ${FILE}"
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_picsort_cleaned.bam ]; then
-${GENMODgit}/wrappers/GATK picard CleanSam \
+${GATKgit}/wrappers/GATK picard CleanSam \
   TMP_DIR=${TMPDIR} \
   INPUT=${FILE%.*}_picsort.bam \
   OUTPUT=${FILE%.*}_picsort_cleaned.bam \
@@ -76,7 +76,7 @@ fi
 
 echo "Marking Duplicates of ${FILE}"
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_dedup.bam ]; then
-${GENMODgit}/wrappers/GATK picard MarkDuplicates \
+${GATKgit}/wrappers/GATK picard MarkDuplicates \
   TMP_DIR=${TMPDIR} \
   INPUT=${FILE%.*}_picsort_cleaned.bam \
   OUTPUT=${FILE%.*}_dedup.bam \
@@ -91,7 +91,7 @@ fi
 
 echo "Adding RG info of ${FILE}"
 if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_dedup_RG.bam ]; then
-${GENMODgit}/wrappers/GATK picard AddOrReplaceReadGroups \
+${GATKgit}/wrappers/GATK picard AddOrReplaceReadGroups \
   TMP_DIR=${TMPDIR} \
   INPUT=${FILE%.*}_dedup.bam \
   OUTPUT=${FILE%.*}_dedup_RG.bam \
@@ -106,7 +106,7 @@ ${GENMODgit}/wrappers/GATK picard AddOrReplaceReadGroups \
 }
 fi
 
-${GENMODgit}/wrappers/GATK samtools index ${FILE%.*}_dedup_RG.bam
+${GATKgit}/wrappers/GATK samtools index ${FILE%.*}_dedup_RG.bam
 
 
 echo "cleaning up of ${FILE%.*}"
@@ -119,11 +119,10 @@ if [ ! -d /tmp/mydir ]; then
 mkdir -p IntermediateBAMfiles
 fi
 
-mv ${FILE%.*}_picsort.bam IntermediateBAMfiles &
-mv ${FILE%.*}_picsort_cleaned.bam IntermediateBAMfiles &
-mv ${FILE%.*}_dedup.bam IntermediateBAMfiles &
-mv ${FILE%.*}_dedup_RG.bam IntermediateBAMfiles &
-mv ${FILE%.*}_target_intervals.list IntermediateBAMfiles &
-mv ${FILE%.*}_metrics.txt IntermediateBAMfiles &
+mv ${FILE%.*}_picsort.bam IntermediateBAMfiles
+mv ${FILE%.*}_picsort_cleaned.bam IntermediateBAMfiles
+mv ${FILE%.*}_dedup.bam IntermediateBAMfiles
+mv ${FILE%.*}_target_intervals.list IntermediateBAMfiles
+mv ${FILE%.*}_metrics.txt IntermediateBAMfiles
 
 echo "All done!"

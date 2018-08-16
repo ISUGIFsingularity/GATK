@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
+export GATKgit="/pylon5/mc48o5p/severin/isugif/GATK"
 export TMPDIR=$LOCAL/
 
 # This assumes that you ran GATK_00 to sort the original reference file.
@@ -9,7 +9,7 @@ export BASEREF=$(basename ${REF%.*})_sorted
 export REF=${BASEREF}_sorted.fa
 
 GENOMEFASTA=$REF
-GENOMEINTERVALS=${BASEREF}_100kb_coords.bed
+GENOMEINTERVALS=${BASEREF}_100kb_gatk_intervals.list
 export TMPDIR=$LOCAL/
 
 #Grab bamfiles that will be used for input. all bam files in the folder will be selected.
@@ -26,13 +26,13 @@ while read line; do \
 g2=$(echo $line | awk '{print $1":"$2"-"$3}'); \
 g1=$(echo $line | awk '{print $1"_"$2"_"$3}'); \
 CWD=$(pwd)
-echo -n "${GENMODgit}/wrappers/GATK gatk HaplotypeCaller  \
+echo -n "${GATKgit}/wrappers/GATK gatk HaplotypeCaller  \
 -R ${GENOMEFASTA} \
 $(cat temp) \
--L "${g2}" --genotyping_mode DISCOVERY -stand_emit_conf 10 -stand_call_conf 30 --output \${TMPDIR}/"${g1}".vcf;"; \
+-L "${g2}" --output \${TMPDIR}/"${g1}".vcf;"; \
 echo "mv \${TMPDIR}/"${g1}".vcf $CWD" ; \
-done<${GENOMEINTERVALS}  > gatk.cmds
+done< $(grep -v "@" ${GENOMEINTERVALS})  > gatk.cmds
 
 
 
-${GENMODgit}/bin/makeSLURM_bridges.py 100 gatk.cmds
+${GATKgit}/bin/makeSLURM_bridges.py 100 gatk.cmds

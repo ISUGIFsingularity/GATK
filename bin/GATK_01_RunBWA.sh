@@ -4,9 +4,10 @@
 
 #command genomeModule READ1 READ2
 
+module load singularity
 
 #change this variable to correspond to the directory you downloaded the git repository
-export GENMODgit="/pylon5/mc48o5p/severin/isugif/GATK"
+export GATKgit="/pylon5/mc48o5p/severin/isugif/GATK"
 
 
 REF="$1"  ## same as input for GATK_00
@@ -22,12 +23,12 @@ if [ "$#" -eq 3 ]; then
   READ1="$2"
   READ2="$3"
   OUTNAME=$(basename ${READ1%.*} | perl -pe 's/_/-/g')_unit_RG
-  ${GENMODgit}/wrappers/GATK bwa mem -M -t ${THREADS} ${REF} ${READ1} ${READ2} | ${GENMODgit}/wrappers/GATK samtools view -buS - > ${OUTNAME}.bam
+  ${GATKgit}/wrappers/GATK bwa mem -  M -t ${THREADS} ${REF} ${READ1} ${READ2} | ${GATKgit}/wrappers/GATK samtools view -buS - > ${OUTNAME}.bam
 # if not just use the reads as single reads
 elif [ "$#" -eq 1 ]; then
   READ1="$2"
   OUTNAME=$(basename ${READ1%.*} | perl -pe 's/_/-/g')_unit_RG
-  ${GENMODgit}/wrappers/GATK bwa mem -M -t ${THREADS} ${REF} ${READ1} | ${GENMODgit}/wrappers/GATK samtools view -buS - > ${OUTNAME}.bam
+  ${GATKgit}/wrappers/GATK bwa mem -M -t ${THREADS} ${REF} ${READ1} | ${GATKgit}/wrappers/GATK samtools view -buS - > ${OUTNAME}.bam
 # if number of arguments do not match, raise error
 else
   echo "ERROR: INVALID NUMBER OF ARGUMENTS"
