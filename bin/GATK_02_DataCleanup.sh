@@ -106,34 +106,8 @@ ${GENMODgit}/wrappers/GATK picard AddOrReplaceReadGroups \
 }
 fi
 
-echo "Indel Realigner: create intervals of ${FILE}"
-if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_target_intervals.list ]; then
 ${GENMODgit}/wrappers/GATK samtools index ${FILE%.*}_dedup_RG.bam
 
-${GENMODgit}/wrappers/GATK gatk \
-  -T RealignerTargetCreator \
-  -R ${REF} \
-  -I ${FILE%.*}_dedup_RG.bam \
-  -o ${FILE%.*}_target_intervals.list || {
-echo >&2 Target intervels list generation failed for $FILE
-exit 1
-}
-fi
-
-echo "Indel Realigner: write realignments of ${FILE}"
-if [ ! -f $PBS_O_WORKDIR/${FILE%.*}_realigned.bam ]; then
-${GENMODgit}/wrappers/GATK gatk \
-  -T IndelRealigner \
-  -R ${REF} \
-  -I ${FILE%.*}_dedup_RG.bam \
-  -targetIntervals ${FILE%.*}_target_intervals.list \
-  -o ${FILE%.*}_realigned.bam || {
-echo >&2 Indel realignment failed for $FILE
-exit 1
-}
-fi
-
-${GENMODgit}/wrappers/GATK samtools index ${FILE%.*}_realigned.bam
 
 echo "cleaning up of ${FILE%.*}"
 #if your job stops midway move all the intermediate files into the main directory and comment out this section
