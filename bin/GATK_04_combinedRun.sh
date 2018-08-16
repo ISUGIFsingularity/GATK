@@ -10,7 +10,7 @@ export REF=${BASEREF}_sorted.fa
 
 GENOMEFASTA=$REF
 GENOMEINTERVALS=${BASEREF}_100kb_coords.bed
-
+export TMPDIR=$LOCAL/
 
 #Grab bamfiles that will be used for input. all bam files in the folder will be selected.
 #these files will be written to a temp file that will be read in later to create the input line for each command
@@ -35,4 +35,4 @@ done<${GENOMEINTERVALS}  > gatk.cmds
 
 
 
-${GENMODgit}/bin/makeSLURM_bridges.py 100 gatk.cmds 
+${GENMODgit}/bin/makeSLURM_bridges.py 100 gatk.cmds
