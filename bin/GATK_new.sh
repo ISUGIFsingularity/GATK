@@ -13,7 +13,7 @@ READ2="$3"
 
 export BASEREF=$(basename ${REF%.*})
 
-echo "[FASTQ to uBAM](https://gatkforums.broadinstitute.org/gatk/discussion/6484#latest#top)""
+echo "[FASTQ to uBAM](https://gatkforums.broadinstitute.org/gatk/discussion/6484#latest#top)"
 
 
 
