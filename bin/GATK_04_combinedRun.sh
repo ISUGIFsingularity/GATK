@@ -35,4 +35,4 @@ done<${GENOMEINTERVALS}  > gatk.cmds
 
 
 
-makeSLURMS_bridges.py 100 gatk.cmds 
+${GENMODgit}/bin/makeSLURMS_bridges.py 100 gatk.cmds 
