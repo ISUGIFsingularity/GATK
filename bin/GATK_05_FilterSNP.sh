@@ -17,7 +17,7 @@ REFERENCE="/work/GIF/remkv6/Purcell/Abalone/15_WhiteWildCultured/H.rufescens.fas
 
 vcf-concat ${vcffile[@]} >> ../${RAW}
 
-  MAXDEPTH=$(grep -oh ";DP=.*;" ${RAW} | cut -d ";" -f 2 | cut -d "="  -f 2 | datamash sstdev 1  |awk '{print $0*5}')
+  MAXDEPTH=$(grep -oh ";DP=.*;" ${RAW} | cut -d ";" -f 2 | cut -d "="  -f 2 | ${GENMODgit}/wrappers/GATK datamash sstdev 1  |awk '{print $0*5}')
 cat ../${RAW} | vcf-sort -t $TMPDIR -p 16 -c > ${RAW%.*}_sorted.vcf
 
 ${GENMODgit}/wrappers/GATK gatk \
