@@ -26,10 +26,10 @@ while read line; do \
 g2=$(echo $line | awk '{print $1":"$2"-"$3}'); \
 g1=$(echo $line | awk '{print $1"_"$2"_"$3}'); \
 CWD=$(pwd)
-echo -n "${GENMODgit}/wrappers/GATK gatk  -T HaplotypeCaller --pcr_indel_model NONE \
+echo -n "${GENMODgit}/wrappers/GATK gatk HaplotypeCaller  \
 -R ${GENOMEFASTA} \
 $(cat temp) \
--L "${g2}" --genotyping_mode DISCOVERY -stand_emit_conf 10 -stand_call_conf 30 -o \${TMPDIR}/"${g1}".vcf;"; \
+-L "${g2}" --genotyping_mode DISCOVERY -stand_emit_conf 10 -stand_call_conf 30 --output \${TMPDIR}/"${g1}".vcf;"; \
 echo "mv \${TMPDIR}/"${g1}".vcf $CWD" ; \
 done<${GENOMEINTERVALS}  > gatk.cmds
 
