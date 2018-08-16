@@ -17,7 +17,11 @@ export REF=$(basename ${REF%.*})_sorted.fa
 
 
 # this option might be the frequetly changed, hence not it's a variable
-THREADS="16"
+THREADS="28"
+echo $THREADS
+echo $REF
+echo $READ1
+echo $READ2
 # if the reads are paired then use -p option
 if [ "$#" -eq 3 ]; then
   READ1="$2"
