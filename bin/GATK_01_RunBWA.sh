@@ -20,14 +20,16 @@ export REF=$(basename ${REF%.*})_sorted.fa
 THREADS="28"
 echo $THREADS
 echo $REF
-echo $READ1
-echo $READ2
+
 # if the reads are paired then use -p option
 if [ "$#" -eq 3 ]; then
   READ1="$2"
   READ2="$3"
   OUTNAME=$(basename ${READ1%.*} | perl -pe 's/_/-/g')_unit_RG
-  ${GATKgit}/wrappers/GATK bwa mem -M -t ${THREADS} ${REF} ${READ1} ${READ2} | ${GATKgit}/wrappers/GATK samtools view -buS - > ${OUTNAME}.bam
+  echo $READ1
+  echo $READ2
+  ${GATKgit}/wrappers/GATK bwa mem -M -t ${THREADS} ${REF} ${READ1} ${READ2}
+  # | ${GATKgit}/wrappers/GATK samtools view -buS - > ${OUTNAME}.bam
 # if not just use the reads as single reads
 elif [ "$#" -eq 1 ]; then
   READ1="$2"
