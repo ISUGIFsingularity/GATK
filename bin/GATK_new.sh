@@ -21,7 +21,7 @@
 
 
 
-    ${GATKgit}/wrappers/GATK picard FastqToSam FASTQ=${READ1} FASTQ2=${READ2}  OUTPUT=$(basename ${READ1%.*})_fastqtosam.bam READ_GROUP_NAME=RG SAMPLE_NAME=sample LIBRARY_NAME=Solexa-272222 PLATFORM=illumina
+    ${GATKgit}/wrappers/GATK picard FastqToSam FASTQ=${READ1} FASTQ2=${READ2}  OUTPUT=$(basename ${READ1%.*})_fastqtosam.bam READ_GROUP_NAME=$(basename ${READ1%.*}) SAMPLE_NAME=$(basename ${READ1%.*}) LIBRARY_NAME=Solexa-272222 PLATFORM=illumina
 
 
 
@@ -63,45 +63,23 @@
 
     echo "Mark Duplicates https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_markduplicates_MarkDuplicates.php"
 
-
-    ${GATKgit}/wrappers/GATK picard MarkDuplicates INPUT=$(basename ${READ1%.*})_mergebamalignment.bam OUTPUT=$(basename ${READ1%.*})_mergebamalignment_markduplicates.bam METRICS_FILE=$(basename ${READ1%.*})_mergebamalignment_markduplicates_metrics.txt OPTICAL_DUPLICATE_PIXEL_DISTANCE=2500 CREATE_INDEX=true TMP_DIR=$LOCAL
-
-
-# generate gatk haplotype caller functions on intervals and generate slurms
-    GENOMEINTERVALS=${BASEREF}_100kb_gatk_intervals.list
-
-    # Create interval list (here 100 kb intervals)
-    ${GATKgit}/wrappers/fasta_length ${BASEREF}.fa > ${BASEREF}_length.txt
-    ${GATKgit}/wrappers/GATK bedtools makewindows -w 100000 -g ${BASEREF}_length.txt > ${BASEREF}_100kb_coords.bed
-    ${GATKgit}/wrappers/GATK picard BedToIntervalList \
-      INPUT= ${BASEREF}_100kb_coords.bed \
-      SEQUENCE_DICTIONARY=${BASEREF}.dict \
-      OUTPUT=${BASEREF}_100kb_gatk_intervals.list
-
-    #Grab bamfiles that will be used for input. all bam files in the folder will be selected.
-    #these files will be written to a temp file that will be read in later to create the input line for each command
-    unset -v bamfiles
-    bamfiles=(*.bam)
-    for bam in ${bamfiles[@]}; do \
-    echo -en "-I ${bam} "; \
-    done > temp
-
-    #combine the reference genome, 100k genomic intervals and the input files into gatk commands
-    #need to figure out how to include direct path to genomeanalysistk.jar file if that is necessary
-    while read line; do \
-    g2=$(echo $line | awk '{print $1":"$2"-"$3}'); \
-    g1=$(echo $line | awk '{print $1"_"$2"_"$3}'); \
-    CWD=$(pwd)
-    echo -n "${GATKgit}/wrappers/GATK gatk HaplotypeCaller  \
-    -R ${REF} \
-    $(cat temp) \
-    -L "${g2}" --output \${TMPDIR}/"${g1}".vcf;"; \
-    echo "mv \${TMPDIR}/"${g1}".vcf $CWD" ; \
-    done< $(grep -v "@" ${GENOMEINTERVALS})  > gatk.cmds
+    # _mergebamalignment_markduplicates
+      ${GATKgit}/wrappers/GATK picard MarkDuplicates INPUT=$(basename ${READ1%.*})_mergebamalignment.bam OUTPUT=$(basename ${READ1%.*}).bam METRICS_FILE=$(basename ${READ1%.*})_mergebamalignment_markduplicates_metrics.txt OPTICAL_DUPLICATE_PIXEL_DISTANCE=2500 CREATE_INDEX=true TMP_DIR=$LOCAL
 
 
 
-    ${GATKgit}/bin/makeSLURM_bridges.py 100 gatk.cmds
+    #clean up
+
+    mv $(basename ${READ1%.*})_bwa_mem.sam  IntermediateBAMfiles/
+    mv $(basename ${READ1%.*})_fastqtosam.bam IntermediateBAMfiles/
+    mv $(basename ${READ1%.*})_markilluminaadapters.bam IntermediateBAMfiles/
+    mv $(basename ${READ1%.*})_markilluminaadapters_metrics.txt IntermediateBAMfiles/
+    mv $(basename ${READ1%.*})_mergebamalignment.bai IntermediateBAMfiles/
+    mv $(basename ${READ1%.*})_mergebamalignment.bam IntermediateBAMfiles/
+    mv $(basename ${READ1%.*})_mergebamalignment_markduplicates_metrics.txt IntermediateBAMfiles/
+    mv $(basename ${READ1%.*})_samtofastq_interleaved.fq IntermediateBAMfiles/
+
+
 
 
 #    echo "Call with HaplotypeCaller https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_haplotypecaller_HaplotypeCaller.php"
