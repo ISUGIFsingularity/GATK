@@ -67,7 +67,44 @@
     ${GATKgit}/wrappers/GATK picard MarkDuplicates INPUT=$(basename ${READ1%.*})_mergebamalignment.bam OUTPUT=$(basename ${READ1%.*})_mergebamalignment_markduplicates.bam METRICS_FILE=$(basename ${READ1%.*})_mergebamalignment_markduplicates_metrics.txt OPTICAL_DUPLICATE_PIXEL_DISTANCE=2500 CREATE_INDEX=true TMP_DIR=$LOCAL
 
 
-    echo "Call with HaplotypeCaller https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_haplotypecaller_HaplotypeCaller.php"
+# generate gatk haplotype caller functions on intervals and generate slurms
+    GENOMEINTERVALS=${BASEREF}_100kb_gatk_intervals.list
+
+    # Create interval list (here 100 kb intervals)
+    ${GATKgit}/wrappers/fasta_length ${BASEREF}.fa > ${BASEREF}_length.txt
+    ${GATKgit}/wrappers/GATK bedtools makewindows -w 100000 -g ${BASEREF}_length.txt > ${BASEREF}_100kb_coords.bed
+    ${GATKgit}/wrappers/GATK picard BedToIntervalList \
+      INPUT= ${BASEREF}_100kb_coords.bed \
+      SEQUENCE_DICTIONARY=${BASEREF}.dict \
+      OUTPUT=${BASEREF}_100kb_gatk_intervals.list
+
+    #Grab bamfiles that will be used for input. all bam files in the folder will be selected.
+    #these files will be written to a temp file that will be read in later to create the input line for each command
+    unset -v bamfiles
+    bamfiles=(*.bam)
+    for bam in ${bamfiles[@]}; do \
+    echo -en "-I ${bam} "; \
+    done > temp
+
+    #combine the reference genome, 100k genomic intervals and the input files into gatk commands
+    #need to figure out how to include direct path to genomeanalysistk.jar file if that is necessary
+    while read line; do \
+    g2=$(echo $line | awk '{print $1":"$2"-"$3}'); \
+    g1=$(echo $line | awk '{print $1"_"$2"_"$3}'); \
+    CWD=$(pwd)
+    echo -n "${GATKgit}/wrappers/GATK gatk HaplotypeCaller  \
+    -R ${GENOMEFASTA} \
+    $(cat temp) \
+    -L "${g2}" --output \${TMPDIR}/"${g1}".vcf;"; \
+    echo "mv \${TMPDIR}/"${g1}".vcf $CWD" ; \
+    done< $(grep -v "@" ${GENOMEINTERVALS})  > gatk.cmds
 
 
-     ${GATKgit}/wrappers/GATK gatk HaplotypeCaller -R ${BASEREF}.fasta -I $(basename ${READ1%.*})_mergebamalignment_markduplicates.bam --output test.vcf
+
+    ${GATKgit}/bin/makeSLURM_bridges.py 100 gatk.cmds
+
+
+#    echo "Call with HaplotypeCaller https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_haplotypecaller_HaplotypeCaller.php"
+
+
+#     ${GATKgit}/wrappers/GATK gatk HaplotypeCaller -R ${BASEREF}.fasta -I $(basename ${READ1%.*})_mergebamalignment_markduplicates.bam --output (basename ${READ1%.*}).vcf
