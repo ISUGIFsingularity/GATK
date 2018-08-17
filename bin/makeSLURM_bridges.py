@@ -8,7 +8,7 @@ Usage:
   makeSLURMs.py <number of jobs per PBS file> <commands file>
 
 eg:
-  
+
   makeSLURMs.py 10 bowtie2.cmds
 
 will create bowtie2_N.sub files, where N equals to number of lines in bowtie2.cmds divided by 10
@@ -16,7 +16,7 @@ will create bowtie2_N.sub files, where N equals to number of lines in bowtie2.cm
 If you have large number of commands that you would like to package (a set number) in a single
 PBS script file, you can run this script along with desired number of commands per job.
 Note that all commands will run in serially with this script (s suffix). If you want to run all commands at a time,
-parallel fashion, then use the p suffix script 
+parallel fashion, then use the p suffix script
 
 Arun Seetharam
 arnstrm@iastate.edu
@@ -44,7 +44,7 @@ else:
                 cmd.append(line)
                 line = cmds.readline()
         w = open(jobname+'_'+str(filecount)+'.sub','w')
-        
+
 #SBATCH -J canu4
 #SBATCH -o canu4.o%j
 #SBATCH -p RM
