@@ -70,4 +70,4 @@
     echo "Call with HaplotypeCaller https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_haplotypecaller_HaplotypeCaller.php"
 
 
-     ${GATKgit}/wrappers/GATK gatk HaplotypeCaller -R ${BASEREF}.fasta -I $(basename ${READ1%.*})_mergebamalignme nt_markduplicates.bam --output test.vcf
+     ${GATKgit}/wrappers/GATK gatk HaplotypeCaller -R ${BASEREF}.fasta -I $(basename ${READ1%.*})_mergebamalignment_markduplicates.bam --output test.vcf
