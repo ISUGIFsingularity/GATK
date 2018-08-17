@@ -49,7 +49,7 @@ g2=$(echo $line | awk '{print $1":"$2"-"$3}'); \
 g1=$(echo $line | awk '{print $1"_"$2"_"$3}'); \
 CWD=$(pwd)
 echo -n "${GATKgit}/wrappers/GATK gatk HaplotypeCaller  \
--R ${GENOMEFASTA} \
+-R ${REF} \
 $(cat temp) \
 -L "${g2}" --output \${TMPDIR}/"${g1}".vcf;"; \
 echo "mv \${TMPDIR}/"${g1}".vcf $CWD" ; \
