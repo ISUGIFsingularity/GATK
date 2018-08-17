@@ -57,7 +57,7 @@
       OUTPUT=${BASEREF}.dict
 
     echo "merge BAM Alignment"
-    ${GATKgit}/wrappers/GATK picard MergeBamAlignment R=${BASEREF}.fasta UNMAPPED_BAM=$(basename ${READ1%.*})_fastqtosam.sam ALIGNED_BAM=$(basename ${READ1%.*})_bwa_mem.bam O=$(basename ${READ1%.*})_mergebamalignment.bam CREATE_INDEX=true ADD_MATE_CIGAR=true CLIP_ADAPTERS=false CLIP_OVERLAPPING_READS=true INCLUDE_SECONDARY_ALIGNMENTS=true MAX_INSERTIONS_OR_DELETIONS=-1 PRIMARY_ALIGNMENT_STRATEGY=MostDistant ATTRIBUTES_TO_RETAIN=XS TMP_DIR=$LOCAL
+    ${GATKgit}/wrappers/GATK picard MergeBamAlignment R=${BASEREF}.fasta UNMAPPED_BAM=$(basename ${READ1%.*})_fastqtosam.bam ALIGNED_BAM=$(basename ${READ1%.*})_bwa_mem.sam O=$(basename ${READ1%.*})_mergebamalignment.bam CREATE_INDEX=true ADD_MATE_CIGAR=true CLIP_ADAPTERS=false CLIP_OVERLAPPING_READS=true INCLUDE_SECONDARY_ALIGNMENTS=true MAX_INSERTIONS_OR_DELETIONS=-1 PRIMARY_ALIGNMENT_STRATEGY=MostDistant ATTRIBUTES_TO_RETAIN=XS TMP_DIR=$LOCAL
 
 
 
