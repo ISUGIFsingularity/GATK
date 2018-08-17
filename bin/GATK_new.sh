@@ -41,7 +41,6 @@
     echo "\n3B Align reads and flag secondary hits using BWA-MEM\n"
 
 
-    ${GATKgit}/wrappers/GATK bwa index -a bwtsw ${BASEREF}.fasta
 
     #add conversion to bam
     ${GATKgit}/wrappers/GATK bwa mem -M -t ${THREADS} -p ${BASEREF}.fasta $(basename ${READ1%.*})_samtofastq_interleaved.fq > $(basename ${READ1%.*})_bwa_mem.sam
@@ -50,11 +49,6 @@
     echo "3C Restore altered data and apply & adjust meta information using MergeBamAlignment"
 
 
-    echo "need sequence dictionary and Reference index file"
-    ${GATKgit}/wrappers/GATK samtools faidx ${BASEREF}.fasta
-    ${GATKgit}/wrappers/GATK picard CreateSequenceDictionary \
-      REFERENCE=${BASEREF}.fasta \
-      OUTPUT=${BASEREF}.dict
 
     echo "merge BAM Alignment"
     ${GATKgit}/wrappers/GATK picard MergeBamAlignment R=${BASEREF}.fasta UNMAPPED_BAM=$(basename ${READ1%.*})_fastqtosam.bam ALIGNED_BAM=$(basename ${READ1%.*})_bwa_mem.sam O=$(basename ${READ1%.*})_mergebamalignment.bam CREATE_INDEX=true ADD_MATE_CIGAR=true CLIP_ADAPTERS=false CLIP_OVERLAPPING_READS=true INCLUDE_SECONDARY_ALIGNMENTS=true MAX_INSERTIONS_OR_DELETIONS=-1 PRIMARY_ALIGNMENT_STRATEGY=MostDistant ATTRIBUTES_TO_RETAIN=XS TMP_DIR=$LOCAL
