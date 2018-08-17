@@ -47,4 +47,4 @@ export GENOMEINTERVALS=${BASEREF}_100kb_gatk_intervals.list
 
 
 
-    ${GATKgit}/bin/makeSLURM_bridges.py 100 $CombinedBAM_gatk.cmds
+    ${GATKgit}/bin/makeSLURM_bridges.py 100 CombinedBAM_gatk.cmds
