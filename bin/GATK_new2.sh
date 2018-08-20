@@ -39,7 +39,7 @@ export GENOMEINTERVALS=${BASEREF}_100kb_gatk_intervals.list
     echo -n "${GATKgit}/wrappers/GATK gatk HaplotypeCaller  \
     -R ${REF} \
     $(cat CombinedBAM_temp) \
-    -L "${g2}" --output ${TMPDIR}/"${g1}".vcf;"; \
+    -L "${g2}" --output \${TMPDIR}/"${g1}".vcf;"; \
     echo "mv \${TMPDIR}/"${g1}".vcf $CWD" ; \
     fi
     done<${GENOMEINTERVALS} > CombinedBAM_gatk.cmds
