@@ -87,7 +87,7 @@ pushd $SPACK_ROOT/mirror/gobject-introspection
 wget https://mirror.umd.edu/gnome/sources/gobject-introspection/1.49/gobject-introspection-1.49.2.tar.xz
 popd
 
-spack install gatk@4.0.4.0
+
 spack install picard
 spack install gmap-gsnap
 spack install bowtie2

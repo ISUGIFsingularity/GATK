@@ -88,18 +88,6 @@ wget https://mirror.umd.edu/gnome/sources/gobject-introspection/1.49/gobject-int
 popd
 
 spack install gatk@4.0.4.0
-spack install picard
-spack install gmap-gsnap
-spack install bowtie2
-spack install bwa
-spack install bedtools2
-spack install samtools
-spack install parallel
-spack install bioawk
-spack install perl
-spack install vcftools
-spack install py-biopython
-spack install datamash
 
 
 #for d in /opt/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/*/bin; do export PATH="$PATH:$d"; done
