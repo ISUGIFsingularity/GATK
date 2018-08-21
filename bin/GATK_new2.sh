@@ -6,7 +6,7 @@ module load singularity
 #change this variable to correspond to the directory you downloaded the git repository
 export GATKgit="/pylon5/mc48o5p/severin/isugif/GATK"
 export TMPDIR=$LOCAL
-THREADS="28"
+THREADS="27"
 
 
 
@@ -14,7 +14,7 @@ THREADS="28"
 REF=$1
 
 export BASEREF=$(basename ${REF%.*})
-export GENOMEINTERVALS=${BASEREF}_100kb_gatk_intervals.list
+export GENOMEINTERVALS=${BASEREF}_1000kb_gatk_intervals.list
 
 
 

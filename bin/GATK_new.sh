@@ -6,7 +6,7 @@
     #change this variable to correspond to the directory you downloaded the git repository
     export GATKgit="/pylon5/mc48o5p/severin/isugif/GATK"
     export TMPDIR=$LOCAL
-    THREADS="28"
+    THREADS="27"
 
 
 
