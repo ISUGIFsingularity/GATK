@@ -36,3 +36,6 @@ done< $(grep -v "@" ${GENOMEINTERVALS})  > gatk.cmds
 
 
 ${GATKgit}/bin/makeSLURM_bridges.py 100 gatk.cmds
+
+
+# -stand_emit_conf 10 -stand_call_conf 30

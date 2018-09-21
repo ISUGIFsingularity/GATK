@@ -32,13 +32,13 @@
     ${GATKgit}/wrappers/GATK picard MarkIlluminaAdapters I=$(basename ${READ1%.*})_fastqtosam.bam O=$(basename ${READ1%.*})_markilluminaadapters.bam M=$(basename ${READ1%.*})_markilluminaadapters_metrics.txt TMP_DIR=$LOCAL
 
 
-    echo "\n3A convert BAM to fastq\n"
+    echo "3A convert BAM to fastq"
 
 
     ${GATKgit}/wrappers/GATK picard SamToFastq I=$(basename ${READ1%.*})_markilluminaadapters.bam FASTQ=$(basename ${READ1%.*})_samtofastq_interleaved.fq CLIPPING_ATTRIBUTE=XT CLIPPING_ACTION=2 INTERLEAVE=true NON_PF=true TMP_DIR=$LOCAL
 
 
-    echo "\n3B Align reads and flag secondary hits using BWA-MEM\n"
+    echo "3B Align reads and flag secondary hits using BWA-MEM"
 
 
 
@@ -72,11 +72,3 @@
     mv $(basename ${READ1%.*})_mergebamalignment.bam IntermediateBAMfiles/
     mv $(basename ${READ1%.*})_mergebamalignment_markduplicates_metrics.txt IntermediateBAMfiles/
     mv $(basename ${READ1%.*})_samtofastq_interleaved.fq IntermediateBAMfiles/
-
-
-
-
-#    echo "Call with HaplotypeCaller https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_haplotypecaller_HaplotypeCaller.php"
-
-
-#     ${GATKgit}/wrappers/GATK gatk HaplotypeCaller -R ${BASEREF}.fasta -I $(basename ${READ1%.*})_mergebamalignment_markduplicates.bam --output (basename ${READ1%.*}).vcf
