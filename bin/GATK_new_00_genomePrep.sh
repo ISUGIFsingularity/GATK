@@ -26,7 +26,7 @@ echo "need sequence dictionary and Reference index file"
       REFERENCE=${BASEREF}.fasta \
       OUTPUT=${BASEREF}.dict
 
-echo "generate gatk haplotype caller functions on intervals and generate slurms"
+echo "generate Genomic intervals"
 
         # Create interval list (here 100 kb intervals)
         ${GATKgit}/wrappers/fasta_length ${BASEREF}.fasta > ${BASEREF}_length.txt
